@@ -7,11 +7,15 @@ export class PokerService {
 
   getOrCreateRoom(roomId: string): Room {
     if (!this.rooms.has(roomId)) {
-      this.rooms.set(roomId, {
+      const newRoom: Room = {
         id: roomId,
+        name: `Room ${roomId}`,
         users: [],
         revealed: false,
-      });
+        createdAt: new Date(),
+        hostId: '',
+      };
+      this.rooms.set(roomId, newRoom);
     }
     return this.rooms.get(roomId);
   }
@@ -19,6 +23,14 @@ export class PokerService {
   addUser(roomId: string, user: User) {
     const room = this.getOrCreateRoom(roomId);
     if (!room.users.find((u) => u.id === user.id)) {
+      // Если это первый пользователь, делаем его хостом
+      if (room.users.length === 0) {
+        user.isHost = true;
+        room.hostId = user.id;
+      } else {
+        user.isHost = false;
+      }
+
       room.users.push(user);
     }
   }
@@ -26,8 +38,20 @@ export class PokerService {
   removeUser(roomId: string, socketId: string) {
     const room = this.rooms.get(roomId);
     if (!room) return;
-    room.users = room.users.filter(u => u.id !== socketId);
-    if (room.users.length === 0) this.rooms.delete(roomId);
+
+    const removedUser = room.users.find((u) => u.id === socketId);
+    room.users = room.users.filter((u) => u.id !== socketId);
+
+    // Если удалённый пользователь был хостом, назначаем нового хоста
+    if (removedUser?.isHost && room.users.length > 0) {
+      const newHost = room.users[0];
+      newHost.isHost = true;
+      room.hostId = newHost.id;
+    }
+
+    if (room.users.length === 0) {
+      this.rooms.delete(roomId);
+    }
   }
 
   setVote(roomId: string, userId: string, value: VoteValue) {
@@ -45,6 +69,33 @@ export class PokerService {
     if (!room) return;
     room.users.forEach((u) => delete u.vote);
     room.revealed = false;
+  }
+
+  startTimer(roomId: string, duration: number) {
+    const room = this.rooms.get(roomId);
+    if (!room) return;
+
+    // Останавливаем предыдущий таймер если есть
+    this.stopTimer(roomId);
+
+    room.timer = {
+      duration,
+      startTime: new Date(),
+      isActive: true,
+    };
+
+    // Запускаем таймер
+    setTimeout(() => {
+      this.stopTimer(roomId);
+    }, duration * 1000);
+  }
+
+  stopTimer(roomId: string) {
+    const room = this.rooms.get(roomId);
+    if (!room || !room.timer) return;
+
+    room.timer.isActive = false;
+    room.timer.startTime = undefined;
   }
 
   getRoom(roomId: string): Room {
