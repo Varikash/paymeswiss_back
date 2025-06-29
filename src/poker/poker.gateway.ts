@@ -59,7 +59,6 @@ export class PokerGateway
       this.pokerService.addUser(roomId, user);
       this.emitRoomUpdate(roomId);
     } catch (error) {
-      // Отправляем ошибку клиенту
       client.emit('join_error', { message: error.message });
       this.logger.warn(`Failed to join room ${roomId}: ${error.message}`);
     }
@@ -72,7 +71,6 @@ export class PokerGateway
   ) {
     const { roomId, value } = data;
 
-    // Валидация VoteValue
     if (!this.isValidVoteValue(value)) {
       this.logger.warn(
         `Invalid vote value: ${value} from client: ${client.id}`,
@@ -119,7 +117,6 @@ export class PokerGateway
     const room = this.pokerService.getRoom(roomId);
     if (!room) return;
 
-    // Отправляем обновление комнаты
     this.server.to(roomId).emit('vote_reveal', { room });
     this.emitRoomUpdate(roomId);
   }

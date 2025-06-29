@@ -1,7 +1,7 @@
 export type VoteValue = 1 | 2 | 3 | 5 | 8 | 13 | '?' | '☕️';
 
 export interface User {
-  id: string; // socket.id
+  id: string;
   name: string;
   vote?: VoteValue;
   isHost?: boolean;

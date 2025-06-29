@@ -1,99 +1,225 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# Planning Poker Backend
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+A real-time Planning Poker application backend built with NestJS and Socket.IO. This application allows teams to conduct agile planning poker sessions with real-time voting, timers, and vote reveal functionality.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Features
 
-## Description
+- **Real-time Communication**: WebSocket-based communication using Socket.IO
+- **Room Management**: Create and join planning poker rooms
+- **Voting System**: Support for standard Fibonacci sequence (1, 2, 3, 5, 8, 13) and special values (?, coffee)
+- **Timer Functionality**: Built-in timer for voting sessions
+- **Host Management**: Automatic host assignment and transfer
+- **Vote Reveal**: Automatic reveal when all players have voted
+- **User Management**: Track users joining and leaving rooms
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## Tech Stack
 
-## Project setup
+- **Framework**: NestJS
+- **Language**: TypeScript
+- **WebSocket**: Socket.IO
+- **Testing**: Jest
+- **Linting**: ESLint + Prettier
 
+## Prerequisites
+
+- Node.js (v16 or higher)
+- npm or yarn
+
+## Installation
+
+1. Clone the repository:
 ```bash
-$ npm install
+git clone <repository-url>
+cd planning-poker-backend
 ```
 
-## Compile and run the project
-
+2. Install dependencies:
 ```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+npm install
 ```
 
-## Run tests
+## Running the Application
 
+### Development Mode
 ```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+npm run start:dev
 ```
 
-## Deployment
-
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
-
+### Production Mode
 ```bash
-$ npm install -g mau
-$ mau deploy
+npm run build
+npm run start:prod
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+### Debug Mode
+```bash
+npm run start:debug
+```
 
-## Resources
+## API Endpoints
 
-Check out a few resources that may come in handy when working with NestJS:
+### WebSocket Events
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+#### Client to Server Events
 
-## Support
+- `join_room`: Join a planning poker room
+  ```typescript
+  {
+    roomId: string;
+    username: string;
+  }
+  ```
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+- `vote`: Submit a vote
+  ```typescript
+  {
+    roomId: string;
+    value: VoteValue; // 1 | 2 | 3 | 5 | 8 | 13 | '?' | 'coffee'
+  }
+  ```
 
-## Stay in touch
+- `reset`: Reset all votes in the room
+  ```typescript
+  {
+    roomId: string;
+  }
+  ```
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+- `start_timer`: Start a voting timer
+  ```typescript
+  {
+    roomId: string;
+    duration: number; // seconds
+  }
+  ```
+
+- `stop_timer`: Stop the current timer
+  ```typescript
+  {
+    roomId: string;
+  }
+  ```
+
+#### Server to Client Events
+
+- `room_update`: Room state update
+- `vote_reveal`: Votes have been revealed
+- `vote_reset`: Votes have been reset
+- `join_error`: Error joining room
+
+## Data Models
+
+### User
+```typescript
+interface User {
+  id: string;
+  name: string;
+  vote?: VoteValue;
+  isHost?: boolean;
+  joinedAt: Date;
+}
+```
+
+### Room
+```typescript
+interface Room {
+  id: string;
+  name: string;
+  users: User[];
+  revealed: boolean;
+  timer?: {
+    duration: number;
+    startTime?: Date;
+    isActive: boolean;
+  };
+  createdAt: Date;
+  hostId: string;
+}
+```
+
+### VoteValue
+```typescript
+type VoteValue = 1 | 2 | 3 | 5 | 8 | 13 | '?' | 'coffee';
+```
+
+## Testing
+
+### Unit Tests
+```bash
+npm run test
+```
+
+### E2E Tests
+```bash
+npm run test:e2e
+```
+
+### Test Coverage
+```bash
+npm run test:cov
+```
+
+## Code Quality
+
+### Linting
+```bash
+npm run lint
+```
+
+### Formatting
+```bash
+npm run format
+```
+
+## Project Structure
+
+```
+src/
+├── app.controller.ts          # Main HTTP controller
+├── app.service.ts             # Main service
+├── app.module.ts              # Root module
+├── main.ts                    # Application entry point
+└── poker/                     # Planning poker module
+    ├── poker.gateway.ts       # WebSocket gateway
+    ├── poker.service.ts       # Business logic
+    ├── poker.module.ts        # Module definition
+    └── types.ts               # Type definitions
+```
+
+## Environment Variables
+
+- `PORT`: Server port (default: 3000)
+
+## Development
+
+### Adding New Features
+
+1. Create feature module in `src/`
+2. Implement business logic in service
+3. Add WebSocket handlers in gateway
+4. Write tests for new functionality
+5. Update documentation
+
+### Code Style
+
+This project uses:
+- ESLint for code linting
+- Prettier for code formatting
+- TypeScript strict mode
 
 ## License
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+This project is licensed under the MIT License.
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Add tests for new functionality
+5. Ensure all tests pass
+6. Submit a pull request
+
+## Support
+
+For questions and support, please open an issue in the repository.

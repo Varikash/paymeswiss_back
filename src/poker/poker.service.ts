@@ -28,7 +28,6 @@ export class PokerService {
     }
 
     if (!room.users.find((u) => u.id === user.id)) {
-      // Если это первый пользователь, делаем его хостом
       if (room.users.length === 0) {
         user.isHost = true;
         room.hostId = user.id;
@@ -47,7 +46,6 @@ export class PokerService {
     const removedUser = room.users.find((u) => u.id === socketId);
     room.users = room.users.filter((u) => u.id !== socketId);
 
-    // Если удалённый пользователь был хостом, назначаем нового хоста
     if (removedUser?.isHost && room.users.length > 0) {
       const newHost = room.users[0];
       newHost.isHost = true;
@@ -80,7 +78,6 @@ export class PokerService {
     const room = this.rooms.get(roomId);
     if (!room) return;
 
-    // Останавливаем предыдущий таймер если есть
     this.stopTimer(roomId);
 
     room.timer = {
@@ -89,10 +86,8 @@ export class PokerService {
       isActive: true,
     };
 
-    // Запускаем таймер
     setTimeout(() => {
       this.handleTimerEnd(roomId);
-      // Вызываем callback для отправки событий
       if (onTimerEnd) {
         onTimerEnd();
       }
@@ -111,17 +106,14 @@ export class PokerService {
     const room = this.rooms.get(roomId);
     if (!room) return;
 
-    // Останавливаем таймер
     this.stopTimer(roomId);
 
-    // Присваиваем '☕️' всем игрокам без голоса
     room.users.forEach((user) => {
       if (!user.vote) {
         user.vote = '☕️';
       }
     });
 
-    // Ревеалим карты
     room.revealed = true;
   }
 
