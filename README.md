@@ -2,6 +2,8 @@
 
 A real-time Planning Poker application backend built with NestJS and Socket.IO. This application allows teams to conduct agile planning poker sessions with real-time voting, timers, and vote reveal functionality.
 
+**Note**: This is a test assignment project demonstrating real-time WebSocket communication and agile planning poker functionality.
+
 ## Features
 
 - **Real-time Communication**: WebSocket-based communication using Socket.IO
@@ -142,84 +144,14 @@ interface Room {
 type VoteValue = 1 | 2 | 3 | 5 | 8 | 13 | '?' | 'coffee';
 ```
 
-## Testing
-
-### Unit Tests
-```bash
-npm run test
-```
-
-### E2E Tests
-```bash
-npm run test:e2e
-```
-
-### Test Coverage
-```bash
-npm run test:cov
-```
-
-## Code Quality
-
-### Linting
-```bash
-npm run lint
-```
-
-### Formatting
-```bash
-npm run format
-```
-
-## Project Structure
-
-```
-src/
-├── app.controller.ts          # Main HTTP controller
-├── app.service.ts             # Main service
-├── app.module.ts              # Root module
-├── main.ts                    # Application entry point
-└── poker/                     # Planning poker module
-    ├── poker.gateway.ts       # WebSocket gateway
-    ├── poker.service.ts       # Business logic
-    ├── poker.module.ts        # Module definition
-    └── types.ts               # Type definitions
-```
-
 ## Environment Variables
 
 - `PORT`: Server port (default: 3000)
 
-## Development
+## Port Configuration
 
-### Adding New Features
+- **Backend**: Runs on port 3000 (default)
+- **Frontend**: Should run on port 3001
 
-1. Create feature module in `src/`
-2. Implement business logic in service
-3. Add WebSocket handlers in gateway
-4. Write tests for new functionality
-5. Update documentation
+Make sure your frontend application is configured to connect to the backend on `localhost:3000`.
 
-### Code Style
-
-This project uses:
-- ESLint for code linting
-- Prettier for code formatting
-- TypeScript strict mode
-
-## License
-
-This project is licensed under the MIT License.
-
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Add tests for new functionality
-5. Ensure all tests pass
-6. Submit a pull request
-
-## Support
-
-For questions and support, please open an issue in the repository.
