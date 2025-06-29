@@ -71,7 +71,7 @@ export class PokerService {
     room.revealed = false;
   }
 
-  startTimer(roomId: string, duration: number) {
+  startTimer(roomId: string, duration: number, onTimerEnd?: () => void) {
     const room = this.rooms.get(roomId);
     if (!room) return;
 
@@ -86,7 +86,11 @@ export class PokerService {
 
     // Запускаем таймер
     setTimeout(() => {
-      this.stopTimer(roomId);
+      this.handleTimerEnd(roomId);
+      // Вызываем callback для отправки событий
+      if (onTimerEnd) {
+        onTimerEnd();
+      }
     }, duration * 1000);
   }
 
@@ -96,6 +100,24 @@ export class PokerService {
 
     room.timer.isActive = false;
     room.timer.startTime = undefined;
+  }
+
+  private handleTimerEnd(roomId: string) {
+    const room = this.rooms.get(roomId);
+    if (!room) return;
+
+    // Останавливаем таймер
+    this.stopTimer(roomId);
+
+    // Присваиваем '☕️' всем игрокам без голоса
+    room.users.forEach((user) => {
+      if (!user.vote) {
+        user.vote = '☕️';
+      }
+    });
+
+    // Ревеалим карты
+    room.revealed = true;
   }
 
   getRoom(roomId: string): Room {

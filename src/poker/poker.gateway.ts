@@ -102,7 +102,18 @@ export class PokerGateway
     @MessageBody() data: { roomId: string; duration: number },
   ) {
     const { roomId, duration } = data;
-    this.pokerService.startTimer(roomId, duration);
+    this.pokerService.startTimer(roomId, duration, () => {
+      this.handleTimerEnd(roomId);
+    });
+    this.emitRoomUpdate(roomId);
+  }
+
+  private handleTimerEnd(roomId: string) {
+    const room = this.pokerService.getRoom(roomId);
+    if (!room) return;
+
+    // Отправляем обновление комнаты
+    this.server.to(roomId).emit('vote_reveal', { room });
     this.emitRoomUpdate(roomId);
   }
 
@@ -119,6 +130,7 @@ export class PokerGateway
   private emitRoomUpdate(roomId: string) {
     const room = this.pokerService.getRoom(roomId);
     if (!room) return;
+    console.log('Sending room_update:', { room });
     this.server.to(roomId).emit('room_update', { room });
   }
 
