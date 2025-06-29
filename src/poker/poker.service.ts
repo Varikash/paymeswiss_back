@@ -22,6 +22,11 @@ export class PokerService {
 
   addUser(roomId: string, user: User) {
     const room = this.getOrCreateRoom(roomId);
+
+    if (room.users.length >= 12) {
+      throw new Error('Room is full. Maximum 12 players allowed.');
+    }
+
     if (!room.users.find((u) => u.id === user.id)) {
       // Если это первый пользователь, делаем его хостом
       if (room.users.length === 0) {

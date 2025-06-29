@@ -45,17 +45,24 @@ export class PokerGateway
     @MessageBody() data: { roomId: string; username: string },
   ) {
     const { roomId, username } = data;
-    client.join(roomId);
-    client.data.roomId = roomId;
 
-    const user = {
-      id: client.id,
-      name: username,
-      joinedAt: new Date(),
-    };
+    try {
+      client.join(roomId);
+      client.data.roomId = roomId;
 
-    this.pokerService.addUser(roomId, user);
-    this.emitRoomUpdate(roomId);
+      const user = {
+        id: client.id,
+        name: username,
+        joinedAt: new Date(),
+      };
+
+      this.pokerService.addUser(roomId, user);
+      this.emitRoomUpdate(roomId);
+    } catch (error) {
+      // Отправляем ошибку клиенту
+      client.emit('join_error', { message: error.message });
+      this.logger.warn(`Failed to join room ${roomId}: ${error.message}`);
+    }
   }
 
   @SubscribeMessage('vote')
